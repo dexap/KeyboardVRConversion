@@ -146,7 +146,7 @@ namespace KeyInputVR.Keyboard
 
         private void ApplySoundStateToSwitches()
         {
-            foreach(KeyInfo info in RegularKeys)
+            foreach(KeyInfo info in KeyInfos)
             {
                 info.SetFeedbackSoundState(IsSoundFeedbackEnabled);
             }

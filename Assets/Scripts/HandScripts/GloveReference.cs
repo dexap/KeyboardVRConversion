@@ -30,20 +30,20 @@ public class GloveReference : MonoBehaviour
 
     public void DisableAllGloveKeyHaptics()
     {
-        _thumbHaptics.enabled = false;
-        _indexHaptics.enabled = false;
-        _middleHaptics.enabled = false;
-        _ringHaptics.enabled = false;
-        _pinkyHaptics.enabled = false;
+        _thumbHaptics.HapticsActive = false;
+        _indexHaptics.HapticsActive = false;
+        _middleHaptics.HapticsActive = false;
+        _ringHaptics.HapticsActive = false;
+        _pinkyHaptics.HapticsActive = false;
     }
 
     public void EnableAllGloveKeyHaptics()
     {
-        _thumbHaptics.enabled = true;
-        _indexHaptics.enabled = true;
-        _middleHaptics.enabled = true;
-        _ringHaptics.enabled = true;
-        _pinkyHaptics.enabled = true;
+        _thumbHaptics.HapticsActive = true;
+        _indexHaptics.HapticsActive = true;
+        _middleHaptics.HapticsActive = true;
+        _ringHaptics.HapticsActive = true;
+        _pinkyHaptics.HapticsActive = true;
     }
 
     public void DisableAllGloveKeyInteractors()

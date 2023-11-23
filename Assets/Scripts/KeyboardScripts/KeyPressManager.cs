@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using KeyInputVR.KeyMaps;
 using KeyInputVR.Keyboard;
+using System;
 
 public class KeyPressManager : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class KeyPressManager : MonoBehaviour
 
     [SerializeField]
     private KeyboardInfo _keyboard;
+
+    //added to fetch which signals are about to get sent to the screen
+    public event Action<string> OnSendingCharacter = delegate { };
 
     private void Awake()
     {   
@@ -47,34 +51,40 @@ public class KeyPressManager : MonoBehaviour
                 {
                     string text = ShouldOutputShiftedVariant() ? keyDefinition.ShiftedOutput : keyDefinition.BaseOutput;
                     _screenView.InsertString(text);
+                    OnSendingCharacter(text);
                     ApplyShiftKeyState(false);
                     break;
                 }
             case KeyType.ENTER:
                 {
                     _screenView.BeginNewLine();
+                    OnSendingCharacter("ENTER");
                     break;
                 }
             case KeyType.SPACE:
                 {
                     _screenView.InsertString(" ");
+                    OnSendingCharacter("SPACE");
                     ApplyShiftKeyState(false);
                     break;
                 }
             case KeyType.BACKSPACE:
                 {
                     _screenView.RemovePreviousCharacter();
+                    OnSendingCharacter("BACKSPACE");
                     break;
                 }
             case KeyType.DELETE:
                 {
                     _screenView.RemoveNextCharacter();
+                    OnSendingCharacter("DELETE");
                     break;
                 }
             case KeyType.TAB:
                 {
                     //four spaces
                     _screenView.InsertString("    ");
+                    OnSendingCharacter("TAB");
                     ApplyShiftKeyState(false);
                     break;
                 }
@@ -91,11 +101,13 @@ public class KeyPressManager : MonoBehaviour
             case KeyType.ARROW_LEFT:
                 {   
                     _screenView.MoveCaretToPreviousCharacter();
+                    OnSendingCharacter("ARROW_LEFT");
                     break;
                 }
             case KeyType.ARROW_RIGHT:
                 {
                     _screenView.MoveCaretToNextCharacter();
+                    OnSendingCharacter("ARROW_RIGHT");
                     break;
                 }
             default: break;

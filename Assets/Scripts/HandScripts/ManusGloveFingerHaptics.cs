@@ -15,17 +15,22 @@ public class ManusGloveFingerHaptics : MonoBehaviour
     private FingerHaptics _fingerHaptics;
 
     private Hand _hand;
+
+    public bool HapticsActive {get; set;} = true;
     
-    void Start()
+    void Awake()
     {
         _hand = _fingerHaptics.GetComponentInParent<Hand>();
     }
 
     public void SendImpulse(SelectEnterEventArgs eventArgs)
     {
-        _hand.data.SetFingerHaptic(_fingerHaptics.fingerType, _intensity);
+        if(HapticsActive)
+        {
+            _hand.data.SetFingerHaptic(_fingerHaptics.fingerType, _intensity);
 
-        StartCoroutine(CancelImpulseCoroutine(_fingerHaptics.fingerType, _duration));
+            StartCoroutine(CancelImpulseCoroutine(_fingerHaptics.fingerType, _duration));
+        }
     }
 
     IEnumerator CancelImpulseCoroutine(FingerType fingerType, float delay)

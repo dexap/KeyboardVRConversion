@@ -1,5 +1,5 @@
-using Hermes.Protocol;
 using KeyInputVR.Keyboard;
+using TMPro;
 using UnityEngine;
 
 public enum ExperimentModalities
@@ -13,28 +13,47 @@ public class ExperimentController : MonoBehaviour
     private KeyboardInfo _keyboardInfo; 
 
     [SerializeField]
+    private KeyPressManager _keyPressManager; 
+
+    [SerializeField]
     private GloveReference _leftGloveReference;
     [SerializeField]
     private GloveReference _rightGloveReference;
+
+    [SerializeField]
+    private TMP_InputField _inputFieldInserting;
 
     private ExperimentStateHandler _experimentStateHandler;
 
     private bool _experimentHasStarted;
 
+    private int _experimentId;
 
-    // public void ChangeModality(ExperimentModalities modality)
-    // {
-    //     CurrentModality = modality;
-    //     ApplyModalityChange(modality);
-    // }
+    //serializer reference gets renewed on every new round within one experiment
+    private InputSerializer _inputSerializer;
+
+    void Awake()
+    {
+        _keyPressManager.OnSendingCharacter += LogInput;
+    }
 
     void Start()
     {
         ApplyModalityChange(ExperimentModalities.DEACTIVATED);
     }
 
+    private void LogInput(string input)
+    {
+        if(_experimentHasStarted)
+        {
+            _inputSerializer.LogInput(input);
+        }
+    }
+
     public void StartExperiment(int experimentId)
     {
+        _experimentId = experimentId;
+
         if(_experimentHasStarted)
         {
             Debug.LogWarning("Another experiment has already been started. "+
@@ -58,6 +77,7 @@ public class ExperimentController : MonoBehaviour
     {
         Debug.Log("Loading experiment from config file "+ ExperimentConfigLoader.ConfigFilePath);
         _experimentStateHandler = new ExperimentStateHandler(experimentId);
+        
         if(_experimentStateHandler.ModalitySequence == null)
         {
             Debug.LogWarning("Failed to load experiment with ID "+ experimentId +" !"+
@@ -85,10 +105,15 @@ public class ExperimentController : MonoBehaviour
 
     public void ActivateNextModality()
     {
+        //clear the text of the input field
+        _inputFieldInserting.text = "";
+
         if(_experimentStateHandler.SwitchToNextModality())
         {
             ApplyModalityChange(CurrentModality());
             Debug.Log("Entered modality: "+ CurrentModality());
+            _inputSerializer = new InputSerializer(_experimentId.ToString(), _experimentStateHandler.Round);
+            Debug.Log("Input data will be logged in "+ _inputSerializer.ResultFilePath);
         }
         else
         {

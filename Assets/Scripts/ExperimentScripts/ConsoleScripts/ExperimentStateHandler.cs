@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ExperimentStateHandler
 {
-    private int _index = -1;
+    public int Round {get; private set;} = -1;
     public List<ExperimentModalities> ModalitySequence {get; private set;}
 
     public ExperimentModalities CurrentModality {get; private set;} = ExperimentModalities.DEACTIVATED;
@@ -23,10 +23,10 @@ public class ExperimentStateHandler
     /// </returns>
     public bool SwitchToNextModality()
     {
-        if(_index+1 < ModalitySequence.Count)
+        if(Round+1 < ModalitySequence.Count)
         {
-            _index += 1;
-            CurrentModality = ModalitySequence[_index];
+            Round += 1;
+            CurrentModality = ModalitySequence[Round];
             return true;
         }
         else
