@@ -34,7 +34,9 @@ public class ExperimentController : MonoBehaviour
 
     void Awake()
     {
-        _keyPressManager.OnSendingCharacter += LogInput;
+        _keyPressManager.OnSendingSignal += LogInput;
+
+        _keyPressManager.OnSendingSignalWithGloves += LogInputForGloves;
     }
 
     void Start()
@@ -47,6 +49,14 @@ public class ExperimentController : MonoBehaviour
         if(_experimentHasStarted)
         {
             _inputSerializer.LogInput(input);
+        }
+    }
+
+    private void LogInputForGloves(string input, Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
+    {
+        if(_experimentHasStarted)
+        {
+            _inputSerializer.LogInput(input, handType, fingerType);
         }
     }
 

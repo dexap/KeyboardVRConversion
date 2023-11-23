@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 using Debug = UnityEngine.Debug;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.Events;
+using Manus.Haptics;
+using Manus.Hand;
+
 
 namespace KeyInputVR.Keyboard
 {
@@ -26,6 +29,8 @@ namespace KeyInputVR.Keyboard
         public IXRSelectInteractor SelectedBy {get; private set; } = null;
 
         public event Action<IKeyMap, Key> OnKeyActivated = delegate { };
+
+        public event Action<IKeyMap, Key, Manus.Utility.HandType, Manus.Utility.FingerType> OnKeyActivatedGloves = delegate { };
 
         // Start is called before the first frame update
         void Start()
@@ -56,6 +61,11 @@ namespace KeyInputVR.Keyboard
             OnKeyActivated(_keyMap, _key);
         }
 
+        public void ActivateKeyGloves(Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
+        {
+            OnKeyActivatedGloves(_keyMap, _key, handType, fingerType);
+        }
+
         public void EnterSelection(SelectEnterEventArgs eventArgs)
         {
             if(SelectedBy == null)
@@ -63,7 +73,17 @@ namespace KeyInputVR.Keyboard
                 SelectedBy = eventArgs.interactorObject;
             }
 
-            ActivateKey();
+            FingerHaptics fingerHaptics = eventArgs.interactorObject.transform.gameObject.GetComponentInParent<FingerHaptics>();
+            HandAnimator handAnimator = eventArgs.interactorObject.transform.gameObject.GetComponentInParent<HandAnimator>();
+
+            if(fingerHaptics != null && handAnimator != null)
+            {
+                ActivateKeyGloves(handAnimator.handModelType, fingerHaptics.fingerType);
+            }
+            else
+            {
+                ActivateKey();
+            }
         }
 
         public void ExitSelection(SelectExitEventArgs eventArgs)

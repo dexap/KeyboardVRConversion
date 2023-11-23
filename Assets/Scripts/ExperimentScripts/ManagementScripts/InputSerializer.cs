@@ -45,6 +45,22 @@ public class InputSerializer
         AddToFile(ResultFilePath, csv);
     }
 
+    public void LogInput(string text, Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
+    {
+        if(_timeOfFirstInput == -1f)
+        {
+            _timeOfFirstInput = Time.time;
+        }
+
+        float timeSinceFirstInput = Time.time - _timeOfFirstInput;
+
+        string csv = timeSinceFirstInput + ";";
+        csv += text + ";";
+        csv += handType + ";";
+        csv += fingerType + ";";
+        AddToFile(ResultFilePath, csv);
+    }
+
     private static void AddToFile(string filePath, string csvLine)
     {
         System.IO.Directory.CreateDirectory(ResultFileLocation);

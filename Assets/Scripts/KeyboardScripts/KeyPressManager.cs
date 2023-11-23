@@ -13,7 +13,8 @@ public class KeyPressManager : MonoBehaviour
     private KeyboardInfo _keyboard;
 
     //added to fetch which signals are about to get sent to the screen
-    public event Action<string> OnSendingCharacter = delegate { };
+    public event Action<string> OnSendingSignal = delegate { };
+    public event Action<string, Manus.Utility.HandType, Manus.Utility.FingerType> OnSendingSignalWithGloves = delegate { };
 
     private void Awake()
     {   
@@ -33,6 +34,7 @@ public class KeyPressManager : MonoBehaviour
         foreach(KeyInfo info in keyInfos)
         {   
             info.OnKeyActivated += KeyActivated;
+            info.OnKeyActivatedGloves += KeyActivatedWithGloves;
         }
     }
 
@@ -40,77 +42,101 @@ public class KeyPressManager : MonoBehaviour
     {
         KeyDefinition keyDefinition = keyMap.GetKeyMap()[key];
 
-        HandleInput(keyDefinition);
+        HandleInput(keyDefinition, key, Manus.Utility.HandType.Invalid, Manus.Utility.FingerType.Invalid);
     }
 
-    private void HandleInput(KeyDefinition keyDefinition)
+    private void KeyActivatedWithGloves(IKeyMap keyMap, Key key, Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
     {
+        KeyDefinition keyDefinition = keyMap.GetKeyMap()[key];
+
+        HandleInput(keyDefinition, key, handType, fingerType);
+    }
+
+    private void HandleInput(KeyDefinition keyDefinition, Key key, Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
+    {
+        string loggingString;
+
         switch(keyDefinition.KeyType)
         {
             case KeyType.REGULAR:
                 {
                     string text = ShouldOutputShiftedVariant() ? keyDefinition.ShiftedOutput : keyDefinition.BaseOutput;
                     _screenView.InsertString(text);
-                    OnSendingCharacter(text);
+                    loggingString = text;
                     ApplyShiftKeyState(false);
                     break;
                 }
             case KeyType.ENTER:
                 {
                     _screenView.BeginNewLine();
-                    OnSendingCharacter("ENTER");
+                    loggingString = key.ToString();
                     break;
                 }
             case KeyType.SPACE:
                 {
                     _screenView.InsertString(" ");
-                    OnSendingCharacter("SPACE");
+                    loggingString = key.ToString();
                     ApplyShiftKeyState(false);
                     break;
                 }
             case KeyType.BACKSPACE:
                 {
                     _screenView.RemovePreviousCharacter();
-                    OnSendingCharacter("BACKSPACE");
+                    loggingString = key.ToString();
                     break;
                 }
             case KeyType.DELETE:
                 {
                     _screenView.RemoveNextCharacter();
-                    OnSendingCharacter("DELETE");
+                    loggingString = key.ToString();
                     break;
                 }
             case KeyType.TAB:
                 {
                     //four spaces
                     _screenView.InsertString("    ");
-                    OnSendingCharacter("TAB");
+                    loggingString = key.ToString();
                     ApplyShiftKeyState(false);
                     break;
                 }
             case KeyType.SHIFT:
                 {
                     ApplyShiftKeyState(true);
+                    loggingString = key.ToString();
                     break;
                 }
             case KeyType.CAPSLOCK:
                 {
-                    InvertCapsLockState();   
+                    InvertCapsLockState();
+                    loggingString = key.ToString();
                     break;
                 }
             case KeyType.ARROW_LEFT:
                 {   
                     _screenView.MoveCaretToPreviousCharacter();
-                    OnSendingCharacter("ARROW_LEFT");
+                    loggingString = key.ToString();
                     break;
                 }
             case KeyType.ARROW_RIGHT:
                 {
                     _screenView.MoveCaretToNextCharacter();
-                    OnSendingCharacter("ARROW_RIGHT");
+                    loggingString = key.ToString();
                     break;
                 }
-            default: break;
+            default:
+                {
+                    loggingString = "NO BEHAVIOR: "+ key.ToString();
+                    break;
+                }
+        }
+
+        if(handType != Manus.Utility.HandType.Invalid && fingerType != Manus.Utility.FingerType.Invalid)
+        {
+            OnSendingSignalWithGloves(loggingString, handType, fingerType);
+        }
+        else
+        {
+            OnSendingSignal(loggingString);
         }
     }
 
