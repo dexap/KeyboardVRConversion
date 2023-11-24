@@ -6,6 +6,8 @@ public class InputSerializer
 {
     public static readonly string ResultFileLocation = Application.persistentDataPath + "/Results/";
 
+    public static readonly string DiscardedFileLocation = Application.persistentDataPath + "/DiscardedResets/";
+
     private string _fileName;
     public string ResultFilePath {get; private set;}
 
@@ -33,7 +35,8 @@ public class InputSerializer
 
     public void LogInput(string text)
     {
-        if(_timeOfFirstInput == -1f)
+        // checking if there has been an input yet
+        if(_timeOfFirstInput < 0)
         {
             _timeOfFirstInput = Time.time;
         }
@@ -67,6 +70,22 @@ public class InputSerializer
         using(StreamWriter sw = File.AppendText(filePath))
         {
             sw.WriteLine(csvLine);
+        }
+    }
+
+    /// <summary>
+    /// Should only be called when a round gets reset.
+    /// Moves the current log file out of the results folder and puts it into a "discarded" folder.
+    /// It is highly recommended to use another InputSerializer instance afterwards!
+    /// </summary>
+    public void DiscardLogFile()
+    {
+        System.IO.Directory.CreateDirectory(DiscardedFileLocation);
+        if(_fileName != null)
+        {   
+            File.Move(ResultFilePath, DiscardedFileLocation+_fileName);
+            //making sure that just in case content is added even after discarding, it goes into the right file
+            ResultFilePath = DiscardedFileLocation+_fileName;
         }
     }
 }

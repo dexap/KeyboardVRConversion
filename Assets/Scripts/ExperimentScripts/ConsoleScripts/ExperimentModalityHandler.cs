@@ -1,14 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExperimentStateHandler
+public enum ExperimentModalities
+{
+    DEACTIVATED, VISUAL, VISUAL_AUDIO, VISUAL_AUDIO_TACTILE
+}
+
+public class ExperimentModalityHandler
 {
     public int Round {get; private set;} = -1;
     public List<ExperimentModalities> ModalitySequence {get; private set;}
 
     public ExperimentModalities CurrentModality {get; private set;} = ExperimentModalities.DEACTIVATED;
 
-    public ExperimentStateHandler(int experimentId)
+    public ExperimentModalityHandler(int experimentId)
     {
         LoadModalitySequence(experimentId);
     }
@@ -23,7 +28,7 @@ public class ExperimentStateHandler
     /// </returns>
     public bool SwitchToNextModality()
     {
-        if(Round+1 < ModalitySequence.Count)
+        if(HasNextModality())
         {
             Round += 1;
             CurrentModality = ModalitySequence[Round];
@@ -33,6 +38,31 @@ public class ExperimentStateHandler
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// Returns if there is a next modality to switch to
+    /// </summary>
+    /// <returns>
+    /// True if there is a next element.
+    /// False if there is no next element to switch to.
+    /// A false return value indicates the end of the experiment cycle.
+    /// </returns>
+    public bool HasNextModality()
+    {
+        if(Round+1 < ModalitySequence.Count)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void DeactivateModalitiesForStandby()
+    {
+        CurrentModality = ExperimentModalities.DEACTIVATED;
     }
 
     private void LoadModalitySequence(int experimentId)

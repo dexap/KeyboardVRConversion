@@ -2,9 +2,9 @@ using KeyInputVR.Keyboard;
 using TMPro;
 using UnityEngine;
 
-public enum ExperimentModalities
+public enum ExperimentStates
 {
-    DEACTIVATED, VISUAL, VISUAL_AUDIO, VISUAL_AUDIO_TACTILE
+    INACTIVE, STANDBY, ACTIVE
 }
 
 public class ExperimentController : MonoBehaviour
@@ -23,9 +23,17 @@ public class ExperimentController : MonoBehaviour
     [SerializeField]
     private TMP_InputField _inputFieldInserting;
 
-    private ExperimentStateHandler _experimentStateHandler;
+    [SerializeField]
+    private FinishButton _finishButton;
 
-    private bool _experimentHasStarted;
+    private ExperimentModalityHandler _experimentModalityHandler;
+
+    private bool HasExperimentHasStarted
+    {
+        get {return _currentExperimentState != ExperimentStates.INACTIVE ? true : false;}
+    }
+
+    private ExperimentStates _currentExperimentState = ExperimentStates.INACTIVE;
 
     private int _experimentId;
 
@@ -37,6 +45,8 @@ public class ExperimentController : MonoBehaviour
         _keyPressManager.OnSendingSignal += LogInput;
 
         _keyPressManager.OnSendingSignalWithGloves += LogInputForGloves;
+
+        _finishButton.OnFinishSignal += FinishRound;
     }
 
     void Start()
@@ -46,7 +56,7 @@ public class ExperimentController : MonoBehaviour
 
     private void LogInput(string input)
     {
-        if(_experimentHasStarted)
+        if(HasExperimentHasStarted)
         {
             _inputSerializer.LogInput(input);
         }
@@ -54,7 +64,7 @@ public class ExperimentController : MonoBehaviour
 
     private void LogInputForGloves(string input, Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
     {
-        if(_experimentHasStarted)
+        if(HasExperimentHasStarted)
         {
             _inputSerializer.LogInput(input, handType, fingerType);
         }
@@ -64,7 +74,7 @@ public class ExperimentController : MonoBehaviour
     {
         _experimentId = experimentId;
 
-        if(_experimentHasStarted)
+        if(HasExperimentHasStarted)
         {
             Debug.LogWarning("Another experiment has already been started. "+
             "To start another one, please finish the started experiment first or restart the program!");
@@ -75,7 +85,6 @@ public class ExperimentController : MonoBehaviour
         if(LoadExperiment(experimentId))
         {
             ActivateNextModality();
-            _experimentHasStarted = true;
         }
         else
         {
@@ -86,9 +95,9 @@ public class ExperimentController : MonoBehaviour
     private bool LoadExperiment(int experimentId)
     {
         Debug.Log("Loading experiment from config file "+ ExperimentConfigLoader.ConfigFilePath);
-        _experimentStateHandler = new ExperimentStateHandler(experimentId);
+        _experimentModalityHandler = new ExperimentModalityHandler(experimentId);
         
-        if(_experimentStateHandler.ModalitySequence == null)
+        if(_experimentModalityHandler.ModalitySequence == null)
         {
             Debug.LogWarning("Failed to load experiment with ID "+ experimentId +" !"+
             "\nDoes the provided ID exist in the config file?");
@@ -99,7 +108,7 @@ public class ExperimentController : MonoBehaviour
         {
             Debug.Log("Loaded experiment with ID "+ experimentId);
             Debug.Log("Loaded experiment sequence:");
-            foreach(ExperimentModalities modality in _experimentStateHandler.ModalitySequence)
+            foreach(ExperimentModalities modality in _experimentModalityHandler.ModalitySequence)
             {
                 Debug.Log(modality);
             }
@@ -108,9 +117,45 @@ public class ExperimentController : MonoBehaviour
         }
     }
 
+    private void FinishRound()
+    {
+        if(!_experimentModalityHandler.HasNextModality())
+        {
+            EndExperiment();
+        }
+        else
+        {
+            Debug.Log("Round finished, experiment now in STANDBY! Ask the experimentee to answer the questionaires."+
+            "To continue, enter the `"+CommandScript.CMD_NEXT_MODE+ "` command!");
+            _currentExperimentState = ExperimentStates.STANDBY;
+            _experimentModalityHandler.DeactivateModalitiesForStandby();
+            ApplyModalityChange(_experimentModalityHandler.CurrentModality);
+        }
+    }
+
     public ExperimentModalities CurrentModality()
     {
-        return _experimentStateHandler.CurrentModality;
+        return _experimentModalityHandler.CurrentModality;
+    }
+
+    public void ResetCurrentModalityRound()
+    {
+        if(_currentExperimentState == ExperimentStates.ACTIVE)
+        {
+            Debug.Log("Resetting the current round for modality "+_experimentModalityHandler.CurrentModality);
+            Debug.Log("Discarding old log file, moving it into "+InputSerializer.DiscardedFileLocation);
+            _inputSerializer.DiscardLogFile();
+
+            //clear the text of the input field
+            _inputFieldInserting.text = "";
+
+            _inputSerializer = new InputSerializer(_experimentId.ToString(), _experimentModalityHandler.Round);
+            Debug.Log("Input data will be logged in "+ _inputSerializer.ResultFilePath);
+        }
+        else
+        {
+            Debug.LogWarning("You need to be in an active experiment state to reset the round of the modality!");
+        }
     }
 
     public void ActivateNextModality()
@@ -118,18 +163,28 @@ public class ExperimentController : MonoBehaviour
         //clear the text of the input field
         _inputFieldInserting.text = "";
 
-        if(_experimentStateHandler.SwitchToNextModality())
+        if(_experimentModalityHandler.SwitchToNextModality())
         {
+            _currentExperimentState = ExperimentStates.ACTIVE;
             ApplyModalityChange(CurrentModality());
             Debug.Log("Entered modality: "+ CurrentModality());
-            _inputSerializer = new InputSerializer(_experimentId.ToString(), _experimentStateHandler.Round);
+            
+            //creating new serializer for fresh experiment round
+            _inputSerializer = new InputSerializer(_experimentId.ToString(), _experimentModalityHandler.Round);
             Debug.Log("Input data will be logged in "+ _inputSerializer.ResultFilePath);
         }
         else
         {
-            Debug.Log("Experiment over!");
-            _experimentHasStarted = false;
+            EndExperiment();
         }
+    }
+
+    private void EndExperiment()
+    {
+        Debug.Log("Experiment over! You can start another experiment or close the program");
+        _currentExperimentState = ExperimentStates.INACTIVE;
+        _experimentModalityHandler.DeactivateModalitiesForStandby();
+        ApplyModalityChange(_experimentModalityHandler.CurrentModality);
     }
 
     private void ApplyModalityChange(ExperimentModalities modality)
@@ -195,4 +250,3 @@ public class ExperimentController : MonoBehaviour
         _leftGloveReference.DisableAllGloveKeyInteractors();
     }
 }
-
