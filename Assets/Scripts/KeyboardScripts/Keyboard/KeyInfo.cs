@@ -32,6 +32,11 @@ namespace KeyInputVR.Keyboard
 
         public event Action<IKeyMap, Key, Manus.Utility.HandType, Manus.Utility.FingerType> OnKeyActivatedGloves = delegate { };
 
+        //added to make sure there are no false positive double inputs
+        private float _deadTimeInSeconds = 0.25f;
+
+        private float _lastPress = -1f;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -51,6 +56,24 @@ namespace KeyInputVR.Keyboard
             UpdateLabel();
         }
 
+        private bool HasDeadTimePassed()
+        {            
+            if(Time.time > _lastPress + _deadTimeInSeconds)
+            {
+                _lastPress = Time.time;
+                return true;
+            }
+
+            //making sure the first press is unaffected
+            if(_lastPress < 0)
+            {
+                _lastPress = Time.time;
+                return true;
+            }
+            
+            return false;
+        }
+
         public Key GetKey()
         {
             return _key;
@@ -58,12 +81,14 @@ namespace KeyInputVR.Keyboard
 
         public void ActivateKey()
         {
-            OnKeyActivated(_keyMap, _key);
+            if(HasDeadTimePassed())
+                OnKeyActivated(_keyMap, _key);
         }
 
         public void ActivateKeyGloves(Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
         {
-            OnKeyActivatedGloves(_keyMap, _key, handType, fingerType);
+            if(HasDeadTimePassed())
+                OnKeyActivatedGloves(_keyMap, _key, handType, fingerType);
         }
 
         public void EnterSelection(SelectEnterEventArgs eventArgs)

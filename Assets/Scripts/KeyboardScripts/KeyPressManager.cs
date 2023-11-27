@@ -41,7 +41,6 @@ public class KeyPressManager : MonoBehaviour
     private void KeyActivated(IKeyMap keyMap, Key key)
     {
         KeyDefinition keyDefinition = keyMap.GetKeyMap()[key];
-
         HandleInput(keyDefinition, key, Manus.Utility.HandType.Invalid, Manus.Utility.FingerType.Invalid);
     }
 
