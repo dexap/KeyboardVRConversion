@@ -101,6 +101,7 @@ namespace KeyInputVR.Keyboard
             FingerHaptics fingerHaptics = eventArgs.interactorObject.transform.gameObject.GetComponentInParent<FingerHaptics>();
             HandAnimator handAnimator = eventArgs.interactorObject.transform.gameObject.GetComponentInParent<HandAnimator>();
 
+            //checking which event should be fired. If the gloves are present, the event for the gloves gets fired.
             if(fingerHaptics != null && handAnimator != null)
             {
                 ActivateKeyGloves(handAnimator.handModelType, fingerHaptics.fingerType);
