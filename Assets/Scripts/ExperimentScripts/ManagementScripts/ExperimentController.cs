@@ -134,6 +134,11 @@ public class ExperimentController : MonoBehaviour
 
     private void FinishRound()
     {
+        if(_currentExperimentState == ExperimentStates.INACTIVE)
+        {
+            return;
+        }
+
         if(!_experimentSequenceHandler.HasNextModality())
         {
             EndExperiment();
