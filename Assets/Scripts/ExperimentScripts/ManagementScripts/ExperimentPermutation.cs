@@ -8,4 +8,6 @@ public class ExperimentPermutation
 public class ExperimentSequence
 {
     public int[] modes;
+
+    public string[] texts;
 }

@@ -33,7 +33,7 @@ public class CommandScript : MonoBehaviour
 
     private void ModeNext()
     {
-        _experimentController.ActivateNextModality();
+        _experimentController.ActivateNextRoundOfSequence();
     }
 
     private void ModeReset()

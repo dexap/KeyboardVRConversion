@@ -4002,7 +4002,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_Text
-      value: Hello World
+      value: "Vielen Dank f\xFCr deine Teilnahme!\n\nAuf diesem Bildschirm werden
+        die zu kopierenden Texte erscheinen.\n\nSobald du mit dem Abtippen fertig
+        bist, dr\xFCcke den roten Button so oft wie sp\xE4ter darauf angezeigt wird."
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_CustomCaretColor
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2899909296221471748, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_IsActive
@@ -4102,7 +4128,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9189460989678269480, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_text
-      value: "Hallo wie geht es?\u200B"
+      value: "Vielen Dank f\xFCr deine Teilnahme!\n\nAuf diesem Bildschirm werden
+        die zu kopierenden Texte erscheinen.\u200B"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5961,6 +5988,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 73168787}
   m_LocalEulerAnglesHint: {x: 111.83499, y: 0, z: 0}
+--- !u!114 &1624727386 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+  m_PrefabInstance: {fileID: 1021398115}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1625564922
 GameObject:
   m_ObjectHideFlags: 0
@@ -6263,6 +6301,7 @@ MonoBehaviour:
   _leftGloveReference: {fileID: 7279590940087218762}
   _rightGloveReference: {fileID: 1202732189567564936}
   _inputFieldInserting: {fileID: 1497774748}
+  _secondaryTextField: {fileID: 1624727386}
   _finishButton: {fileID: 2137709992}
 --- !u!114 &1727812018
 MonoBehaviour:
@@ -8604,7 +8643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSecondsBetweenPresses: 1
-  _requiredChainLength: 5
+  _requiredChainLength: 3
   _labelText: {fileID: 1100557385}
 --- !u!114 &2137709996
 MonoBehaviour:

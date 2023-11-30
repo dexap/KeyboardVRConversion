@@ -40,6 +40,10 @@ namespace KeyInputVR.Keyboard
         // Start is called before the first frame update
         void Start()
         {
+            //added to remove warning messages for the push button, which has no keys associated
+            if(transform.name == "Push Button")
+                return;
+
             if(_key == Key.None)
             {
                 Debug.LogWarning("Key type of '"+ transform.name +"' isn't set!", gameObject);
