@@ -7157,6 +7157,7 @@ GameObject:
   - component: {fileID: 1727812019}
   - component: {fileID: 1727812018}
   - component: {fileID: 1727812017}
+  - component: {fileID: 1727812020}
   m_Layer: 0
   m_Name: ConsoleScripts
   m_TagString: Untagged
@@ -7178,6 +7179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyboardInfo: {fileID: 2102219915}
   _keyPressManager: {fileID: 372931230}
+  _physicalInputManager: {fileID: 1727812020}
   _leftGloveReference: {fileID: 7279590940087218762}
   _rightGloveReference: {fileID: 1202732189567564936}
   _inputFieldInserting: {fileID: 1497774748}
@@ -7211,6 +7213,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1727812020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727812016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30a4fa4f20d5b054aaeae3e3fc5aa4a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _screenView: {fileID: 1882879947}
 --- !u!1 &1756509013
 GameObject:
   m_ObjectHideFlags: 0
@@ -7761,6 +7776,26 @@ PrefabInstance:
       propertyPath: m_Text
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2899909296221471748, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -7836,6 +7871,10 @@ PrefabInstance:
     - target: {fileID: 8921386602620371370, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189460989678269480, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_text
+      value: "aaa\u200B"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9581,7 +9620,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1

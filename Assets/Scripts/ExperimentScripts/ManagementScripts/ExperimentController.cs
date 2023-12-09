@@ -16,6 +16,9 @@ public class ExperimentController : MonoBehaviour
     private KeyPressManager _keyPressManager; 
 
     [SerializeField]
+    private PhysicalInputManager _physicalInputManager;
+
+    [SerializeField]
     private GloveReference _leftGloveReference;
     [SerializeField]
     private GloveReference _rightGloveReference;
@@ -54,6 +57,8 @@ public class ExperimentController : MonoBehaviour
 
         _keyPressManager.OnSendingSignalWithGloves += LogInputForGloves;
 
+        _physicalInputManager.OnSendingSignal += LogInputForPhysicalKeyboard;
+
         _finishButton.OnFinishSignal += FinishRound;
     }
 
@@ -76,6 +81,17 @@ public class ExperimentController : MonoBehaviour
         if(HasExperimentStarted)
         {
             _inputSerializer.LogInput(input, handType, fingerType);
+        }
+    }
+
+    private void LogInputForPhysicalKeyboard(string input)
+    {
+        if(!HasExperimentStarted)
+            return;
+
+        if(_experimentSequenceHandler.CurrentModality == ExperimentModalities.NO_VR)
+        {
+            _inputSerializer.LogInput(input);
         }
     }
 
@@ -220,21 +236,31 @@ public class ExperimentController : MonoBehaviour
                 DeactivateInteractions();
                 DeactivateAudio();
                 DeactivateHaptics();
+                DisablePhysicalInput();
+                break;
+            case ExperimentModalities.NO_VR:
+                DeactivateInteractions();
+                DeactivateAudio();
+                DeactivateHaptics();
+                EnablePhysicalInput();
                 break;
             case ExperimentModalities.VISUAL:
                 ActivateInteractions();
                 DeactivateAudio();
                 DeactivateHaptics();
+                DisablePhysicalInput();
                 break;
             case ExperimentModalities.VISUAL_AUDIO:
                 ActivateInteractions();
                 ActivateAudio();
                 DeactivateHaptics();
+                DisablePhysicalInput();
                 break;
             case ExperimentModalities.VISUAL_AUDIO_TACTILE:
                 ActivateInteractions();
                 ActivateAudio();
                 ActivateHaptics();
+                DisablePhysicalInput();
                 break;
             default:
                 break;
@@ -273,5 +299,15 @@ public class ExperimentController : MonoBehaviour
     {
         _rightGloveReference.DisableAllGloveKeyInteractors();
         _leftGloveReference.DisableAllGloveKeyInteractors();
+    }
+
+    private void EnablePhysicalInput()
+    {
+        _physicalInputManager.InputEnabled = true;
+    }
+
+    private void DisablePhysicalInput()
+    {
+        _physicalInputManager.InputEnabled = false;
     }
 }
