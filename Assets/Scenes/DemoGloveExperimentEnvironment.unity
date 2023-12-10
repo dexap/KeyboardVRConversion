@@ -8185,7 +8185,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_LineLimit
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_Interactable

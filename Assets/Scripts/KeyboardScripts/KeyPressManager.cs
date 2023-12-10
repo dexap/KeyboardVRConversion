@@ -65,12 +65,12 @@ public class KeyPressManager : MonoBehaviour
                     ApplyShiftKeyState(false);
                     break;
                 }
-            case KeyType.ENTER:
-                {
-                    _screenView.BeginNewLine();
-                    loggingString = key.ToString();
-                    break;
-                }
+            // case KeyType.ENTER:
+            //     {
+            //         _screenView.BeginNewLine();
+            //         loggingString = key.ToString();
+            //         break;
+            //     }
             case KeyType.SPACE:
                 {
                     _screenView.InsertString(" ");
@@ -84,20 +84,20 @@ public class KeyPressManager : MonoBehaviour
                     loggingString = key.ToString();
                     break;
                 }
-            case KeyType.DELETE:
-                {
-                    _screenView.RemoveNextCharacter();
-                    loggingString = key.ToString();
-                    break;
-                }
-            case KeyType.TAB:
-                {
-                    //four spaces
-                    _screenView.InsertString("    ");
-                    loggingString = key.ToString();
-                    ApplyShiftKeyState(false);
-                    break;
-                }
+            // case KeyType.DELETE:
+            //     {
+            //         _screenView.RemoveNextCharacter();
+            //         loggingString = key.ToString();
+            //         break;
+            //     }
+            // case KeyType.TAB:
+            //     {
+            //         //four spaces
+            //         _screenView.InsertString("    ");
+            //         loggingString = key.ToString();
+            //         ApplyShiftKeyState(false);
+            //         break;
+            //     }
             case KeyType.SHIFT:
                 {
                     ApplyShiftKeyState(true);
@@ -110,18 +110,18 @@ public class KeyPressManager : MonoBehaviour
                     loggingString = key.ToString();
                     break;
                 }
-            case KeyType.ARROW_LEFT:
-                {   
-                    _screenView.MoveCaretToPreviousCharacter();
-                    loggingString = key.ToString();
-                    break;
-                }
-            case KeyType.ARROW_RIGHT:
-                {
-                    _screenView.MoveCaretToNextCharacter();
-                    loggingString = key.ToString();
-                    break;
-                }
+            // case KeyType.ARROW_LEFT:
+            //     {   
+            //         _screenView.MoveCaretToPreviousCharacter();
+            //         loggingString = key.ToString();
+            //         break;
+            //     }
+            // case KeyType.ARROW_RIGHT:
+            //     {
+            //         _screenView.MoveCaretToNextCharacter();
+            //         loggingString = key.ToString();
+            //         break;
+            //     }
             default:
                 {
                     loggingString = "NO BEHAVIOR: "+ key.ToString();
