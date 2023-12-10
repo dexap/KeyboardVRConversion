@@ -40,6 +40,9 @@ public class ExperimentController : MonoBehaviour
     [SerializeField]
     private FinishButton _finishButtonNoVR;
 
+    [SerializeField]
+    private CameraManager _cameraManager;
+
     private ExperimentSequenceHandler _experimentSequenceHandler;
 
     private bool HasExperimentStarted
@@ -312,6 +315,8 @@ public class ExperimentController : MonoBehaviour
         
         _finishButton.InteractionsEnabled = false;
         _finishButtonNoVR.InteractionsEnabled = true;
+
+        _cameraManager.SwitchToNoVR();
     }
 
     private void DisableNoVREnvironment()
@@ -320,5 +325,7 @@ public class ExperimentController : MonoBehaviour
         
         _finishButton.InteractionsEnabled = true;
         _finishButtonNoVR.InteractionsEnabled = false;
+
+        _cameraManager.SwitchToVR();
     }
 }

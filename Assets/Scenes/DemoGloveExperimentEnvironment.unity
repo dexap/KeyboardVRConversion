@@ -3721,7 +3721,7 @@ GameObject:
   - component: {fileID: 723092739}
   - component: {fileID: 723092744}
   m_Layer: 5
-  m_Name: "\uF702UI Canvas End NoVR"
+  m_Name: Canvas End NoVR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7548,8 +7548,9 @@ GameObject:
   - component: {fileID: 1727812018}
   - component: {fileID: 1727812017}
   - component: {fileID: 1727812020}
+  - component: {fileID: 1727812021}
   m_Layer: 0
-  m_Name: ConsoleScripts
+  m_Name: ExperimentScripts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7576,6 +7577,7 @@ MonoBehaviour:
   _secondaryTextField: {fileID: 1624727386}
   _finishButton: {fileID: 2137709992}
   _finishButtonNoVR: {fileID: 723092744}
+  _cameraManager: {fileID: 1727812021}
 --- !u!114 &1727812018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7617,6 +7619,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _screenView: {fileID: 1882879947}
+--- !u!114 &1727812021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727812016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df0f59d9471d6a45964dc8aa5ddbf77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vrCamera: {fileID: 191223984}
+  _noVRCamera: {fileID: 2106237357}
 --- !u!1 &1756509013
 GameObject:
   m_ObjectHideFlags: 0
@@ -8168,6 +8184,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_LineLimit
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763689246982425517, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
@@ -8188,6 +8208,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2899909296221471748, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3437600212893427586, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -8247,6 +8271,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8921386601948895570, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8921386601948895572, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_BlockingMask.m_Bits
       value: 4294967295
@@ -8265,7 +8293,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9189460989678269480, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
       propertyPath: m_text
-      value: "aaa\u200B"
+      value: "\u200B"
+      objectReference: {fileID: 0}
+    - target: {fileID: 9189460989678269480, guid: 2cf5e1412e15eed439fef940c858e016, type: 3}
+      propertyPath: m_overflowMode
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10011,7 +10043,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 1
+  m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
