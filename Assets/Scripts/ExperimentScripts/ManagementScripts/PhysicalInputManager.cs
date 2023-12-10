@@ -42,7 +42,6 @@ public class PhysicalInputManager : MonoBehaviour
             }
             else
             {
-                Debug.Log(key);
                 loggingString = key.ToString();
                 _screenView.InsertString(key.ToString());
             }

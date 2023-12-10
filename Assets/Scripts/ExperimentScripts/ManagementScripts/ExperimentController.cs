@@ -37,6 +37,9 @@ public class ExperimentController : MonoBehaviour
     [SerializeField]
     private FinishButton _finishButton;
 
+    [SerializeField]
+    private FinishButton _finishButtonNoVR;
+
     private ExperimentSequenceHandler _experimentSequenceHandler;
 
     private bool HasExperimentStarted
@@ -60,6 +63,8 @@ public class ExperimentController : MonoBehaviour
         _physicalInputManager.OnSendingSignal += LogInputForPhysicalKeyboard;
 
         _finishButton.OnFinishSignal += FinishRound;
+
+        _finishButtonNoVR.OnFinishSignal += FinishRound;
     }
 
     void Start()
@@ -236,31 +241,31 @@ public class ExperimentController : MonoBehaviour
                 DeactivateInteractions();
                 DeactivateAudio();
                 DeactivateHaptics();
-                DisablePhysicalInput();
+                DisableNoVREnvironment();
                 break;
             case ExperimentModalities.NO_VR:
                 DeactivateInteractions();
                 DeactivateAudio();
                 DeactivateHaptics();
-                EnablePhysicalInput();
+                EnableNoVREnvironment();
                 break;
             case ExperimentModalities.VISUAL:
                 ActivateInteractions();
                 DeactivateAudio();
                 DeactivateHaptics();
-                DisablePhysicalInput();
+                DisableNoVREnvironment();
                 break;
             case ExperimentModalities.VISUAL_AUDIO:
                 ActivateInteractions();
                 ActivateAudio();
                 DeactivateHaptics();
-                DisablePhysicalInput();
+                DisableNoVREnvironment();
                 break;
             case ExperimentModalities.VISUAL_AUDIO_TACTILE:
                 ActivateInteractions();
                 ActivateAudio();
                 ActivateHaptics();
-                DisablePhysicalInput();
+                DisableNoVREnvironment();
                 break;
             default:
                 break;
@@ -301,13 +306,19 @@ public class ExperimentController : MonoBehaviour
         _leftGloveReference.DisableAllGloveKeyInteractors();
     }
 
-    private void EnablePhysicalInput()
+    private void EnableNoVREnvironment()
     {
         _physicalInputManager.InputEnabled = true;
+        
+        _finishButton.InteractionsEnabled = false;
+        _finishButtonNoVR.InteractionsEnabled = true;
     }
 
-    private void DisablePhysicalInput()
+    private void DisableNoVREnvironment()
     {
         _physicalInputManager.InputEnabled = false;
+        
+        _finishButton.InteractionsEnabled = true;
+        _finishButtonNoVR.InteractionsEnabled = false;
     }
 }
