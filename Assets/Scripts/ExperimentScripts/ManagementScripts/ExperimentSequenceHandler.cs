@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum ExperimentModalities
 {
-    DEACTIVATED, VISUAL, VISUAL_AUDIO, VISUAL_AUDIO_TACTILE
+    DEACTIVATED, NO_VR, VISUAL, VISUAL_AUDIO, VISUAL_AUDIO_TACTILE
 }
 
 public class ExperimentSequenceHandler

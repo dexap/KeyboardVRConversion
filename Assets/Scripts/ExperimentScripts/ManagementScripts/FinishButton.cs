@@ -16,6 +16,8 @@ public class FinishButton : MonoBehaviour
 
     public event Action OnFinishSignal = delegate { };
 
+    public bool InteractionsEnabled {get; set;} = true;
+
     [SerializeField]
     private Text _labelText;
 
@@ -39,6 +41,9 @@ public class FinishButton : MonoBehaviour
 
     public void OnButtonPress()
     {
+        if(!InteractionsEnabled)
+            return;
+
         if(_chainedPresses == 0)
         {
             AddToChainCounter();
