@@ -10073,6 +10073,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2043066480405472099, guid: 76f3439a0ae796e4b81bee3f91f888ee, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2043066480405472099, guid: 76f3439a0ae796e4b81bee3f91f888ee, type: 3}
       propertyPath: m_PokeConfiguration.m_Variable
       value: 
       objectReference: {fileID: 11400000, guid: 46e2ccdb4b9f8304fa176334c4f5c0e4, type: 2}

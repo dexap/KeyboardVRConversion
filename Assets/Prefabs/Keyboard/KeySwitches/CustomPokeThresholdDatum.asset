@@ -17,5 +17,5 @@ MonoBehaviour:
   m_Value:
     m_PokeDirection: 5
     m_InteractionDepthOffset: 0
-    m_EnablePokeAngleThreshold: 0
+    m_EnablePokeAngleThreshold: 1
     m_PokeAngleThreshold: 45
