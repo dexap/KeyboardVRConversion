@@ -21,4 +21,4 @@ This project was made with the Manus Prime X Haptic Gloves in mind.
 
 This project makes use of the `KeyInputVR` project.
 All necessary files are provided within this project and don't need to be imported. </br>
-The original source can be viewed here: https://github.com/hunsri/KeyInputVR
+The original source can be viewed here: https://github.com/hunsri/XR-TactileKeyboard
