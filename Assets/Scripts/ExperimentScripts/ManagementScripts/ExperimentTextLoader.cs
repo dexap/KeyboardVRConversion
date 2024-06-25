@@ -9,17 +9,16 @@ public static class ExperimentTextLoader
     {
         string textFilePath = SearchForTextFile(textFileName);
 
-        if(textFilePath != null)
+        if (textFilePath == null)
         {
-            return LoadText(textFilePath);
+          Debug.LogError("Unable to find the text file named `" + textFileName + "`, that is referenced in the config file, " +
+          "in the text file location `" + TextFileLocation + "`!");
+          return null;
         }
-        else
-        {
-            Debug.LogError("Unable to find the text file named `"+textFileName+"`, that is referenced in the config file, "+
-            "in the text file location `"+TextFileLocation+"`!");
-            return null;
-        }
-    }
+
+        return LoadText(textFilePath);
+        
+  }
 
     private static string LoadText(string textFilePath)
     {
@@ -27,8 +26,16 @@ public static class ExperimentTextLoader
 
         text = File.ReadAllText(textFilePath);
 
-        return text;
+        return ChooseRandomLine(text);
     }
+
+    private static string ChooseRandomLine(string text)
+    {
+        string[] lines = text.Split('\n');
+        int randomIndex = Random.Range(0, lines.Length);
+        return lines[randomIndex];
+    }
+    
 
     private static string SearchForTextFile(string textFileName)
     {   

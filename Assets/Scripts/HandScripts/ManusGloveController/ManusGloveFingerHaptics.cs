@@ -7,9 +7,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class ManusGloveFingerHaptics : MonoBehaviour
 {
-    private float _duration = 0.2f;
+    public float Duration { get; set; } = 0.1f;
 
-    private float _intensity = 0.5f;
+    public float Intensity { get; set; } = 0.2f;
     
     [SerializeField]
     private FingerHaptics _fingerHaptics;
@@ -27,9 +27,9 @@ public class ManusGloveFingerHaptics : MonoBehaviour
     {
         if(HapticsActive)
         {
-            _hand.data.SetFingerHaptic(_fingerHaptics.fingerType, _intensity);
+            _hand.data.SetFingerHaptic(_fingerHaptics.fingerType, Intensity);
 
-            StartCoroutine(CancelImpulseCoroutine(_fingerHaptics.fingerType, _duration));
+            StartCoroutine(CancelImpulseCoroutine(_fingerHaptics.fingerType, Duration));
         }
     }
 
