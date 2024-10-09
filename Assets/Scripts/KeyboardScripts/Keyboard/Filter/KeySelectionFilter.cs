@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Filtering;
 
-namespace KeyInputVR.Keyboard.Filter
+namespace KeyboardScripts.Keyboard.Filter
 {
     /// <summary>
     /// Filter to only allow one interactor selecting an interactable at a time.

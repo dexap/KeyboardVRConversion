@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using KeyInputVR.KeyMaps;
 using KeyInputVR.Keyboard;
 using System;
+using KeyboardScripts.Keyboard;
 
 public class KeyPressManager : MonoBehaviour
 {

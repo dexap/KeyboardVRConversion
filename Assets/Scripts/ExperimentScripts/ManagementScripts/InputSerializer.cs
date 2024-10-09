@@ -121,6 +121,8 @@ public class InputSerializer
                 break;
             case "NO BEHAVIOR: \r" or "NO BEHAVIOR: \n" or "NO BEHAVIOR: \r\n" or "NO BEHAVIOR: \n\r" or "NO BEHAVIOR: ":
                 break;
+            case "LeftShift" or "RightShift" or "LeftControl" or "RightControl" or "LeftAlt" or "RightAlt":
+                break;
             default:
                 _experimentData.TypedKeys.Add(keystroke.Key); 
                 break;
@@ -136,7 +138,8 @@ public class InputSerializer
     private static float CalculateErrorRate(string originalText, List<string> typedKeys)
     {
         var typedText = string.Join("", typedKeys).Replace(" ", "");
-        var levenshteinDistance = ComputeLevenshteinDistance(originalText.ToLower(), typedText.ToLower());
+        //var levenshteinDistance = ComputeLevenshteinDistance(originalText.ToLower(), typedText.ToLower());
+        var levenshteinDistance = ComputeLevenshteinDistance(originalText, typedText);
         var errorRate = (float)levenshteinDistance / originalText.Length;
         return errorRate;
     }

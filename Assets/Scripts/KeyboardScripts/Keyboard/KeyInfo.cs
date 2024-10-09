@@ -1,15 +1,16 @@
 using System;
+using KeyInputVR.Keyboard;
 using KeyInputVR.KeyMaps;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using Debug = UnityEngine.Debug;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.Events;
-using Manus.Haptics;
 using Manus.Hand;
+using Manus.Haptics;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
+using Debug = UnityEngine.Debug;
 
 
-namespace KeyInputVR.Keyboard
+namespace KeyboardScripts.Keyboard
 {
     public class KeyInfo : MonoBehaviour
     {
@@ -23,6 +24,8 @@ namespace KeyInputVR.Keyboard
 
         [SerializeField]
         private KeyMarker _keyMarker;
+
+        public KeySound KeySound;
 
         private bool _isShifted;
 
@@ -92,7 +95,14 @@ namespace KeyInputVR.Keyboard
         public void ActivateKeyGloves(Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
         {
             if(HasDeadTimePassed())
+            {
                 OnKeyActivatedGloves(_keyMap, _key, handType, fingerType);
+                
+                if (KeySound != null)
+                {
+                    KeySound.PlaySoundOnKeyPress();
+                }
+            }
         }
 
         public void EnterSelection(SelectEnterEventArgs eventArgs)

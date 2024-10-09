@@ -162,13 +162,13 @@ public class ExperimentSequenceHandler
         TextSequence = new List<string>();
         TextSequenceNames = new List<string>();
 
-        for(int i = 0; i < sequence.texts.Length; i++)
+        foreach (var t in sequence.texts)
         {
-            string text = ExperimentTextLoader.FetchText(sequence.texts[i]);
+            var text = ExperimentTextLoader.FetchText(t);
             if(text != null)
             {
                 TextSequence.Add(text);
-                TextSequenceNames.Add(sequence.texts[i]);
+                TextSequenceNames.Add(t);
             }
         }
     }

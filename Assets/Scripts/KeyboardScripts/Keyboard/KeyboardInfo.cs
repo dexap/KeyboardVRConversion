@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using KeyInputVR.KeyMaps;
 using UnityEngine;
 
-namespace KeyInputVR.Keyboard
+namespace KeyboardScripts.Keyboard
 {
     public class KeyboardInfo : MonoBehaviour
     {
@@ -43,6 +43,7 @@ namespace KeyInputVR.Keyboard
             foreach(KeyInfo info in KeyInfos)
             {   
                 info.SetKeyMap(_keyMap);
+                info.KeySound = info.GetComponent<KeySound>();
 
                 KeyType keyType = _keyMap.GetKeyMap()[info.GetKey()].KeyType;
 

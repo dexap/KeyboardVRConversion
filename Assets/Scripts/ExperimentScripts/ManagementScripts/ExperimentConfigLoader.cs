@@ -4,7 +4,7 @@ using System.IO;
 public static class ExperimentConfigLoader
 {
     public static readonly string ConfigFileLocation = Application.persistentDataPath;
-    public static readonly string ConfigFilePath = Path.Combine(ConfigFileLocation, "config.json");
+    public static readonly string ConfigFilePath = Path.Combine(ConfigFileLocation, "config.json").Replace("/", "\\");
 
     public static ExperimentPermutation FetchExperimentConfig()
     {
