@@ -11,6 +11,8 @@ namespace ExperimentScripts.Model
         public string Text { get; set; }
         public float WordsPerMinute { get; set; }
         public float ErrorRate { get; set; }
+        public List<float> SecondsBetweenBacksace { get; set; }
+        public float AvarageTimeBetweenKeyStrokes { get; set; }
         public List<string> TypedKeys { get; set; }
         public List<Keystroke> Keystrokes { get; set; }
         

@@ -13,13 +13,13 @@ public class InputSerializer
 
     public static readonly string DiscardedFileLocation = Application.persistentDataPath + "/DiscardedResets/";
 
-    private readonly string _csvLogFileName;
     private readonly string _resultJsonFilePath;
     public string CsvLogFilePath { get; private set; }
     private string JsonResultFilePath { get; set; }
 
 
     private float _timeOfFirstInput = -1f;
+    private float _timeOfFirstBackspace = -1f;
 
     private readonly ExperimentData _experimentData;
 
@@ -52,55 +52,37 @@ public class InputSerializer
             WordsPerMinute = 0f,
             ErrorRate = 0f,
             TypedKeys = new List<string>(),
-            Keystrokes = new List<Keystroke>()
+            Keystrokes = new List<Keystroke>(),
+            SecondsBetweenBacksace = new List<float>(),
+            AvarageTimeBetweenKeyStrokes = 0f
         };
-        SaveToResultJsonFile(JsonResultFilePath);
+        SaveToJsonResultFile(JsonResultFilePath);
     }
 
     public void LogInput(string text)
     {
         // checking if there has been an input yet
-        if (_timeOfFirstInput < 0)
-        {
-            _timeOfFirstInput = Time.time;
-        }
+        if (_timeOfFirstInput < 0) { _timeOfFirstInput = Time.time; }
 
         var timeSinceFirstInput = Time.time - _timeOfFirstInput;
 
-        // CSV file
-        // var csvLine = timeSinceFirstInput + ";";
-        // csvLine += text + ";"; 
-        // AddLineToCsvLogFile(CsvLogFilePath, csvLine);
-
-        // JSON file
-
-        LogKeystrokeToJsonResultFile(text, timeSinceFirstInput, Manus.Utility.HandType.Invalid,
+        LogKeystrokeToExperimentData(text, timeSinceFirstInput, Manus.Utility.HandType.Invalid,
             Manus.Utility.FingerType.Invalid);
-        SaveToResultJsonFile(JsonResultFilePath);
+        SaveToJsonResultFile(JsonResultFilePath);
     }
 
     public void LogInput(string text, Manus.Utility.HandType handType, Manus.Utility.FingerType fingerType)
     {
-        if (_timeOfFirstInput < 0)
-        {
-            _timeOfFirstInput = Time.time;
-        }
+        if (_timeOfFirstInput < 0) { _timeOfFirstInput = Time.time; }
 
         var timeSinceFirstInput = Time.time - _timeOfFirstInput;
 
-        // CSV file
-        //var csvLine = timeSinceFirstInput + ";";
-        //csvLine += text + ";";
-        //csvLine += handType + ";";
-        //csvLine += fingerType + ";";
-        //AddLineToCsvLogFile(CsvLogFilePath, csvLine);
-
-        LogKeystrokeToJsonResultFile(text, timeSinceFirstInput, handType, fingerType);
-        SaveToResultJsonFile(JsonResultFilePath);
+        LogKeystrokeToExperimentData(text, timeSinceFirstInput, handType, fingerType);
+        SaveToJsonResultFile(JsonResultFilePath);
     }
 
 
-    private void LogKeystrokeToJsonResultFile(string text, float timeSinceFirstInput, Manus.Utility.HandType handType,
+    private void LogKeystrokeToExperimentData(string text, float timeSinceFirstInput, Manus.Utility.HandType handType,
         Manus.Utility.FingerType fingerType)
     {
         Keystroke keystroke = new()
@@ -115,30 +97,43 @@ public class InputSerializer
         {
             case "Backspace" or "BACKSPACE":
                 _experimentData.TypedKeys.RemoveAt(_experimentData.TypedKeys.Count - 1);
+                if (_timeOfFirstBackspace < 0)
+                {
+                    _timeOfFirstBackspace = Time.time;
+                }
+                var timeSinceLastBackspace = Time.time - _timeOfFirstBackspace;
+                _experimentData.SecondsBetweenBacksace.Add(timeSinceLastBackspace);
                 break;
             case "Space" or "SPACE":
                 _experimentData.TypedKeys.Add(" ");
                 break;
-            case "NO BEHAVIOR: \r" or "NO BEHAVIOR: \n" or "NO BEHAVIOR: \r\n" or "NO BEHAVIOR: \n\r" or "NO BEHAVIOR: ":
+            case string key when key.StartsWith("NO"):
                 break;
-            case "LeftShift" or "RightShift" or "LeftControl" or "RightControl" or "LeftAlt" or "RightAlt":
+            case "LeftShift" or "RightShift" or "LeftControl" or "RightControl" or "LeftAlt" or "RightAlt" or "CapsLock" or "Tab" or "Return" or "NO BEHAVIOR: LeftCtrl" or "NO BEHAVIOR: LeftShift" or "NO BEHAVIOR: RightShift" or "NO BEHAVIOR: RightCtrl" or "NO BEHAVIOR: LeftAlt" or "NO BEHAVIOR: RightAlt":
                 break;
             default:
-                _experimentData.TypedKeys.Add(keystroke.Key); 
+                _experimentData.TypedKeys.Add(keystroke.Key);
                 break;
         }
 
         _experimentData.Keystrokes.Add(keystroke);
 
-        // Calculated Data
+        // Calculate Result data On Time
         _experimentData.WordsPerMinute = CalculateWordsPerMinute(timeSinceFirstInput, _experimentData.TypedKeys);
         _experimentData.ErrorRate = CalculateErrorRate(_experimentData.Text, _experimentData.TypedKeys);
+        _experimentData.AvarageTimeBetweenKeyStrokes = CalculateAvarageTimeBetweenKeyStrokes(_experimentData.Keystrokes);
+    }
+
+    private float CalculateAvarageTimeBetweenKeyStrokes(List<Keystroke> keystrokes)
+    {
+        if (keystrokes.Count < 2) { return 0f; }
+
+        return keystrokes[^1].Time / keystrokes.Count;
     }
 
     private static float CalculateErrorRate(string originalText, List<string> typedKeys)
     {
         var typedText = string.Join("", typedKeys).Replace(" ", "");
-        //var levenshteinDistance = ComputeLevenshteinDistance(originalText.ToLower(), typedText.ToLower());
         var levenshteinDistance = ComputeLevenshteinDistance(originalText, typedText);
         var errorRate = (float)levenshteinDistance / originalText.Length;
         return errorRate;
@@ -181,15 +176,7 @@ public class InputSerializer
         return d[source.Length, target.Length];
     }
 
-
-    private static void AddLineToCsvLogFile(string filePath, string csvLine)
-    {
-        Directory.CreateDirectory(ResultFileLocation);
-        using StreamWriter sw = File.AppendText(filePath);
-        sw.WriteLine(csvLine);
-    }
-
-    private void SaveToResultJsonFile(string filePath)
+    private void SaveToJsonResultFile(string filePath)
     {
         var json = JsonConvert.SerializeObject(_experimentData);
         File.WriteAllText(filePath, json);
@@ -203,15 +190,6 @@ public class InputSerializer
     public void DiscardLogFile()
     {
         Directory.CreateDirectory(DiscardedFileLocation);
-        /*
-        if (_csvLogFileName != null)
-        {
-            File.Move(CsvLogFilePath, DiscardedFileLocation + _csvLogFileName);
-            //making sure that just in case content is added even after discarding, it goes into the right file
-            CsvLogFilePath = DiscardedFileLocation + _csvLogFileName;
-        }
-        */
-
         if (JsonResultFilePath != null)
         {
             File.Move(JsonResultFilePath, DiscardedFileLocation + _resultJsonFilePath);
